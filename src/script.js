@@ -34,6 +34,7 @@ loader.load(
 
         sceneGlb.rotation.set(-.21,0,0);
         sceneGlb.position.set(0,-.49,0);
+        //Изменить цвет модели
         for(const el in sceneGlb.children[0].children){
             // sceneGlb.children[0].children[el].receiveShadow=true
             //sceneGlb.children[0].children[el].castShadow=true;
