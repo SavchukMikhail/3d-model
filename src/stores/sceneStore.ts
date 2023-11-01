@@ -14,6 +14,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
+import { HandModelMeshNames } from 'shared';
+
 const modelUrl = '/models/hand.glb';
 
 class SceneStore {
@@ -78,11 +80,11 @@ class SceneStore {
       for (const mesh of modelData.children) {
         bb.expandByObject(mesh);
 
-        if (mesh.name === 'skeleton') continue;
+        if (mesh.name === HandModelMeshNames.Skeleton) continue;
 
         const currentMesh = mesh as Mesh;
 
-        if (currentMesh.name === 'biceps') {
+        if (currentMesh.name === HandModelMeshNames.Biceps) {
           currentMesh.material = new MeshPhysicalMaterial({
             color: 0x00ff00,
             reflectivity: 0.5,
