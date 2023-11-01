@@ -1,0 +1,28 @@
+:root {
+  --bg-default: #1A1A1A;
+  --bg-primary: #1B43CE;
+  --bg-secondary: #57A992;
+
+  --bg-primary-hovered: #5D2DF5;
+
+  --typo-primary: #FFFFFF;
+
+  --disabled-color: #C5C5C5;
+
+  --common-border-radius: 4px;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
