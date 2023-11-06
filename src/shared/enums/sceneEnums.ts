@@ -1,3 +1,8 @@
+export enum MuscleHighlight {
+  NoHighlight,
+  HasHighlight,
+}
+
 export enum HandModelMeshNames {
   Anconeus = 'anconeus',
   Biceps = 'biceps',

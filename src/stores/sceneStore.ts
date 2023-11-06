@@ -1,24 +1,31 @@
 import { makeAutoObservable } from 'mobx';
 import {
-  AmbientLight,
   Box3,
   Color,
-  Mesh,
-  MeshPhysicalMaterial,
   PerspectiveCamera,
+  PointLight,
   Scene,
+  Vector2,
   Vector3,
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
-import { HandModelMeshNames } from 'shared';
+import { SceneUtils } from 'shared';
+import { ISceneStore } from 'shared/interfaces';
+import { HandProcessingModel } from 'shared/models';
 
-const modelUrl = '/models/hand.glb';
+const isDebug = true;
 
-class SceneStore {
+const stats = new Stats();
+
+isDebug && document.body.appendChild(stats.dom);
+
+class SceneStore implements ISceneStore {
   public mainCanvas: HTMLCanvasElement;
   public context: WebGLRenderingContext;
 
@@ -26,9 +33,14 @@ class SceneStore {
 
   public scene = new Scene();
   public camera: PerspectiveCamera = new PerspectiveCamera();
-  public renderer: WebGLRenderer = new WebGLRenderer();
 
-  private isModelLoaded = false;
+  private readonly renderer: WebGLRenderer;
+  private effectComposer: EffectComposer;
+  public outlinePass: OutlinePass | null = null;
+
+  private handModel: HandProcessingModel | null = null;
+
+  private lights: PointLight[] = [];
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
@@ -45,6 +57,9 @@ class SceneStore {
 
     this.controls = new OrbitControls(this.camera, canvas);
     this.renderer = new WebGLRenderer({ canvas: this.mainCanvas, context: this.context });
+    this.renderer.shadowMap.enabled = true;
+
+    this.effectComposer = new EffectComposer(this.renderer);
   }
 
   public zoomTo(bb: Box3, zoomFactor = 1) {
@@ -62,58 +77,42 @@ class SceneStore {
   }
 
   public initModel() {
-    const loader = new GLTFLoader();
-    const dracoLoader = new DRACOLoader();
+    if (this.handModel) return;
 
-    dracoLoader.setDecoderPath('/js/libs/draco-new/');
-    loader.setDRACOLoader(dracoLoader);
-
-    loader.load(modelUrl, (gltf) => {
-      if (this.isModelLoaded) return;
-
-      const modelData = gltf.scene;
-
-      this.scene.add(modelData);
-      this.isModelLoaded = true;
-      const bb = new Box3();
-
-      for (const mesh of modelData.children) {
-        bb.expandByObject(mesh);
-
-        if (mesh.name === HandModelMeshNames.Skeleton) continue;
-
-        const currentMesh = mesh as Mesh;
-
-        if (currentMesh.name === HandModelMeshNames.Biceps) {
-          currentMesh.material = new MeshPhysicalMaterial({
-            color: 0x00ff00,
-            reflectivity: 0.5,
-            roughness: 0.4,
-          });
-        } else {
-          (currentMesh.material as any).color = new Color(
-            Math.random(),
-            Math.random(),
-            Math.random(),
-          );
-        }
-      }
-
-      this.zoomTo(bb);
-    });
+    this.handModel = new HandProcessingModel(this);
+    this.handModel.init(this.lights);
   }
 
   public initLight() {
-    const ambientLight = new AmbientLight(0xf0f0f0); // soft white light
-    this.scene.add(ambientLight);
+    const firstPointLight = new PointLight(0xfafafa, 500);
+    firstPointLight.position.set(15, 2, 25);
+
+    this.scene.add(firstPointLight);
+    this.lights.push(firstPointLight);
+
+    const secondPointLight = new PointLight().copy(firstPointLight);
+    secondPointLight.position.set(-10, -5, -25);
+
+    this.scene.add(secondPointLight);
+    this.lights.push(secondPointLight);
+
+    const thirdPointLight = new PointLight().copy(firstPointLight);
+    thirdPointLight.position.set(30, 20, -10);
+
+    this.scene.add(thirdPointLight);
+    this.lights.push(thirdPointLight);
   }
 
   private render() {
+    requestAnimationFrame(this.render.bind(this));
+
+    isDebug && stats.begin();
+
     this.controls.update();
 
-    this.renderer.render(this.scene, this.camera);
+    this.effectComposer.render();
 
-    requestAnimationFrame(this.render.bind(this));
+    isDebug && stats.end();
   }
 
   public updateSceneSizes(width: number, height: number) {
@@ -122,7 +121,9 @@ class SceneStore {
 
     // Update renderer
     this.renderer.setSize(width, height);
+    this.effectComposer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   }
 
   public initScene(wrapper: HTMLDivElement) {
@@ -135,11 +136,31 @@ class SceneStore {
 
     this.initLight();
 
+    const renderPass = new RenderPass(this.scene, this.camera);
+    this.effectComposer.addPass(renderPass);
+
+    this.outlinePass = new OutlinePass(
+      new Vector2(wrapper.clientWidth, wrapper.clientHeight),
+      this.scene,
+      this.camera,
+    );
+    this.outlinePass.visibleEdgeColor = new Color(0.7, 0.7, 0.7);
+    this.outlinePass.hiddenEdgeColor = new Color(0.15, 0.15, 0.15);
+    this.effectComposer.addPass(this.outlinePass);
+
     (window as any).scene = this.scene;
-    const light = new AmbientLight(0x404040); // soft white light
-    this.scene.add(light);
 
     this.render();
+  }
+
+  public checkIntersection(mousePosition: Vector2) {
+    if (!this.outlinePass) return;
+
+    SceneUtils.raycaster.setFromCamera(mousePosition, this.camera);
+
+    const intersects = SceneUtils.raycaster.intersectObject(this.scene);
+
+    this.handModel?.updateModelByIntersections(intersects);
   }
 
   public deInit() {
