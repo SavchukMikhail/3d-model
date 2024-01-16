@@ -5,6 +5,17 @@
 
   --bg-primary-hovered: #5D2DF5;
 
+  --bg-hovered: rgba(128, 128, 128, 0.16);
+  --bg-selected: rgba(144, 202, 249, 0.16);
+
+  --white: #f1f1f1;
+  --grey: #969696;
+
+  --bg-primary-light: #4068E7;
+  --grey-light: rgba(168, 168, 168, 0.25);
+
+  --box-shadow-light: rgba(212, 216, 222, 0.2);
+
   --typo-primary: #FFFFFF;
 
   --disabled-color: #C5C5C5;
@@ -26,3 +37,19 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #424242;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #686868;
+  border-radius: 6px;
+}
+

@@ -27,15 +27,17 @@ export class MuscleMaterial extends RawShaderMaterial {
 
     this.uniforms = {
       color: new Uniform(color),
-      shininess: new Uniform(1000.0),
+      shininess: new Uniform(100.0),
       needHighlight: new Uniform(MuscleHighlight.NoHighlight),
       pointLightPosition: new Uniform(positions),
       pointLightColor: new Uniform(colors),
       pointLightIntensity: new Uniform(intensions),
     };
 
-    this.vertexShader = muscleVertexShader;
-    this.fragmentShader = muscleFragmentShader;
+    const lightsCount = lightsInfo.length;
+
+    this.vertexShader = muscleVertexShader(lightsCount);
+    this.fragmentShader = muscleFragmentShader(lightsCount);
 
     this.needsUpdate = true;
   }

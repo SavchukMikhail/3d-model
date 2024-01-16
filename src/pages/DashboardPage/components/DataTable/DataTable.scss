@@ -1,0 +1,59 @@
+.DataTable {
+  width: 100%;
+  height: 100%;
+
+  overflow: auto;
+
+  thead {
+    z-index: 3 !important;
+  }
+
+  &__headerCell {;
+    min-width: 200px;
+    padding: 8px;
+    position: relative;
+    z-index: 1;
+    background: var(--bg-default);
+
+    &_isFirst {
+      position: sticky;
+      left: 0;
+      z-index: 4;
+      box-shadow: -24px 0px 0px -20px var(--grey-light) inset;
+    }
+  }
+
+  tbody tr {
+    height: 40px;
+    border-top: 1px solid var(--grey) !important;
+    border-bottom: 1px solid var(--grey) !important;
+    text-align: center;
+  }
+
+  &__dataCell {;
+    position: relative;
+    z-index: 1;
+    background: var(--bg-default);
+
+    &_isFirst {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      box-shadow: -24px 0px 0px -20px var(--grey-light) inset;
+    }
+  }
+
+  &__verticalLine {
+    width: 1px;
+    height: 50%;
+    position: absolute;
+    background: var(--grey);
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    &_isHidden {
+      display: none;
+    }
+  }
+}

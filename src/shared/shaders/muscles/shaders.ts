@@ -1,4 +1,4 @@
-export const muscleVertexShader = `
+export const muscleVertexShader = (lightsCount: number) => `
     attribute vec3 position;
     attribute vec3 normal;
 
@@ -15,17 +15,17 @@ export const muscleVertexShader = `
     varying vec4 vColor;
     varying vec3 vNormal;
     varying vec3 vPosition;
-    varying vec3 vLightDir[3]; // Массив для направлений от источников света
-    varying vec3 vLightColor[3]; // Массив для цветов и интенсивности света
-    varying float vIntensity[3]; // Массив для интенсивности источников света
-    varying float vDistance[3]; // Массив для расстояния от источников света
+    varying vec3 vLightDir[${lightsCount}]; // Массив для направлений от источников света
+    varying vec3 vLightColor[${lightsCount}]; // Массив для цветов и интенсивности света
+    varying float vIntensity[${lightsCount}]; // Массив для интенсивности источников света
+    varying float vDistance[${lightsCount}]; // Массив для расстояния от источников света
 
     void main() {
         vColor = float(needHighlight) == 1.0 ? vec4(0.2, 0.3, 1.0, 1.0) : color;
         vPosition = vec3(modelViewMatrix);
         vNormal = normalize(normalMatrix * normal);
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < ${lightsCount}; i++) {
                 vLightDir[i] = normalize(pointLightPosition[i] - vPosition);
                 vLightColor[i] = pointLightColor[i];
                 vIntensity[i] = pointLightIntensity[i];
@@ -36,7 +36,7 @@ export const muscleVertexShader = `
     }
 `;
 
-export const muscleFragmentShader = `
+export const muscleFragmentShader = (lightsCount: number) => `
     precision highp float;
 
     uniform vec3 ambientColor;
@@ -55,7 +55,7 @@ export const muscleFragmentShader = `
         vec3 viewDir = normalize(-vPosition);
         vec3 resultColor = vec3(0.0);
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < ${lightsCount}; i++) {
                 vec3 lightDir = normalize(vLightDir[i]);
                 float diff = max(dot(normal, lightDir), 0.0);
                 vec3 diffuse = diff * vLightColor[i] * vIntensity[i] / (vDistance[i] * vDistance[i]);

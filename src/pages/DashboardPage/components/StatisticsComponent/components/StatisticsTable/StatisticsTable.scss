@@ -1,0 +1,55 @@
+.StatisticsTable {
+  &__table {
+    height: 100%;
+    background: var(--bg-default) !important;
+    box-shadow: none !important;
+
+    td, th {
+      background: var(--bg-default) !important;
+      color: var(--typo-primary) !important;
+      border-color: var(--grey) !important;
+    }
+
+    tr:last-child td {
+      border: none !important;
+    }
+  }
+
+  &__row {
+    cursor: pointer;
+
+    &:hover td {
+      background: var(--bg-hovered) !important;
+    }
+
+    &_selected {
+      td {
+        background: var(--bg-selected) !important;
+      }
+
+      &:hover td {
+        background: var(--bg-selected) !important;
+      }
+    }
+  }
+
+  &__gradient {
+    margin: 0 auto;
+    display: flex;
+    gap: 2px;
+    height: 30px;
+    background: var(--grey-light);
+  }
+
+  &__gradientStep {
+    width: 4px;
+    height: 100%;
+  }
+
+  &__dot {
+    margin: 0 auto;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+}

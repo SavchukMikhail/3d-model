@@ -1,0 +1,39 @@
+.DashboardPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+
+  &__header {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 1.2rem;
+    width: 100%;
+    height: 60px;
+  }
+
+  &__tabs {
+    .MuiTabs-indicator {
+      background: var(--bg-primary-light) !important;
+    }
+  }
+
+  &__tab {
+    padding: 8px;
+    cursor: pointer;
+    color: var(--typo-primary) !important;
+
+    &.Mui-selected {
+      color: var(--bg-primary-light) !important;
+    }
+  }
+
+  &__content {
+    width: 100%;
+    height: calc(100% - 80px);
+  }
+}

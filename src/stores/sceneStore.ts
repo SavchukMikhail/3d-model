@@ -19,7 +19,7 @@ import { SceneUtils } from 'shared';
 import { ISceneStore } from 'shared/interfaces';
 import { HandProcessingModel } from 'shared/models';
 
-const isDebug = true;
+const isDebug = false;
 
 const stats = new Stats();
 
@@ -165,6 +165,7 @@ class SceneStore implements ISceneStore {
 
   public deInit() {
     this.scene.clear();
+    this.lights = [];
   }
 }
 
