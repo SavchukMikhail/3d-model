@@ -1,0 +1,44 @@
+.PatientsList {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 8px;
+
+  &__searchInput {
+    margin-bottom: 16px !important;
+
+    * {
+      color: var(--white) !important;
+    }
+
+    fieldset {
+      border-color: var(--bg-primary) !important;
+    }
+
+    &:hover fieldset {
+      border-color: var(--bg-primary-light) !important;
+    }
+  }
+
+  &__patient {
+    background: var(--grey-light) !important;
+    border-radius: var(--common-border-radius) !important;
+    padding: 8px;
+    max-height: 48px;
+    position: relative;
+
+    &.Mui-selected {
+      &::before {
+        content: ' ';
+        background: var(--bg-primary);
+        width: 12px;
+        height: 100%;
+        border-top-right-radius: var(--common-border-radius);
+        border-bottom-right-radius: var(--common-border-radius);
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+  }
+}

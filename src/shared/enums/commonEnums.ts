@@ -2,6 +2,7 @@ export enum RouterPathEnum {
   Main = '/',
   Scene = '/scene',
   Dashboard = '/dashboard',
+  Auth = '/auth',
 }
 
 export enum DragNDropEvents {

@@ -129,6 +129,8 @@ class SceneStore implements ISceneStore {
   public initScene(wrapper: HTMLDivElement) {
     wrapper.prepend(this.mainCanvas);
 
+    this.scene.background = new Color(0.68, 0.68, 0.68);
+
     this.updateSceneSizes(wrapper.clientWidth, wrapper.clientHeight);
 
     this.camera.position.z = 5;

@@ -1,7 +1,27 @@
-.cnMainPage {
+.MainPage {
   width: 100vw;
   height: 100vh;
 
   background-color: var(--bg-default);
   color: var(--typo-primary);
+
+  &__header {
+    height: 70px;
+  }
+
+  &__pageContent {
+    display: flex;
+    gap: 20px;
+    height: calc(100% - 70px);
+  }
+
+  &__patientsList {
+    width: 300px;
+    padding: 24px 8px !important;
+    border-right: 2px solid var(--bg-primary);
+  }
+
+  &__userContent {
+    width: calc(100% - 300px);
+  }
 }

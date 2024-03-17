@@ -1,8 +1,9 @@
 import React from 'react';
-import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { RouterPathEnum } from 'shared';
 
+import LoginPage from './pages/LoginPage';
 import ScenePage from './pages/ScenePage';
 import { DashboardPage, ErrorPage, MainPage, RootLayout } from './pages';
 
@@ -18,9 +19,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <MainPage />,
-        loader: () => {
-          return redirect(RouterPathEnum.Scene);
-        },
       },
       {
         path: RouterPathEnum.Scene,
@@ -31,6 +29,10 @@ const router = createBrowserRouter([
         element: <DashboardPage />,
       },
     ],
+  },
+  {
+    path: RouterPathEnum.Auth,
+    element: <LoginPage />,
   },
 ]);
 
