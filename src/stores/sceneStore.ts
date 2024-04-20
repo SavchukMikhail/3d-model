@@ -84,7 +84,7 @@ class SceneStore implements ISceneStore {
   }
 
   public initLight() {
-    const firstPointLight = new PointLight(0xfafafa, 500);
+    const firstPointLight = new PointLight(0xfafafa, 2000);
     firstPointLight.position.set(15, 2, 25);
 
     this.scene.add(firstPointLight);
@@ -129,7 +129,7 @@ class SceneStore implements ISceneStore {
   public initScene(wrapper: HTMLDivElement) {
     wrapper.prepend(this.mainCanvas);
 
-    this.scene.background = new Color(0.68, 0.68, 0.68);
+    this.scene.background = new Color(255, 255, 255);
 
     this.updateSceneSizes(wrapper.clientWidth, wrapper.clientHeight);
 

@@ -12,6 +12,8 @@ class PatientsStore {
 
   public selectedPatientId: number | null = null;
 
+  public dates: any = [];
+
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true });
   }
@@ -31,8 +33,9 @@ class PatientsStore {
     this.isLoading = true;
 
     try {
-      const patientData = await PatientsApiService.getPatientInfo(selectedPatientId);
-      console.log(patientData);
+      const dates = await PatientsApiService.getDatesListByPatientId(selectedPatientId);
+      this.dates = dates;
+      console.log(dates);
     } catch (e) {
       console.log(e);
     } finally {
